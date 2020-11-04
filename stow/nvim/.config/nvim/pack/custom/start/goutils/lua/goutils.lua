@@ -22,7 +22,7 @@ local function render_floating_window(options)
     local buf = a.nvim_create_buf(false, true)
     a.nvim_buf_set_option(buf, 'bufhidden', 'delete')
     opts.width = width
-    opts.height = height / 2
+    opts.height = math.floor(height / 2)
     opts.row = width-1
     opts.col = 0
     local win = a.nvim_open_win(buf, 0, opts)
@@ -136,6 +136,7 @@ function module.make(target)
   local stdout = vim.loop.new_pipe(false)
   local stderr = vim.loop.new_pipe(false)
 
+  vim.cmd(string.format("echom 'Running: \"%s\" with args: \"%s\"'", program, args))
   handle, pid = vim.loop.spawn(program, {
     args = vim.split(args, ' '),
     stdio = { stdin, stdout, stderr }
