@@ -10,7 +10,16 @@ Requirements:
 - [minpac](https://github.com/k-takata/minpac)
 - [fisher](https://github.com/jorgebucaran/fisher)
 
+Linux:
+
 ```shell
-$ for dir in stow/*; stow --dir stow --target $HOME -S $dir; end
+$ for dir in stow/{alacritty_linux, fish, git, nvim, redshift}; stow --dir stow --target $HOME -S (basename $dir); end
+$ fisher
+```
+
+MacOS:
+
+```shell
+$ for dir in stow/{alacritty_darwin, fish, git, nvim}; stow --dir stow --target $HOME -S (basename $dir); end
 $ fisher
 ```

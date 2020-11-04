@@ -52,7 +52,7 @@ augroup END
 " ==============================
 let g:one_allow_italics = 1
 let g:yui_comments = "emphasize"
-colorscheme iceberg
+colorscheme space_vim_theme
 
 " Call my own SetPath function so that every git file is added to path. Let's
 " me get most of FZF without using FZF
@@ -139,7 +139,7 @@ let g:EditorConfig_max_line_indicator = "exceeding"
 let g:EditorConfig_preserve_formatoptions = 1
 
 " ======= NVIM COLORIZER ============
-packadd nvim-colorizer
+packadd nvim-colorizer.lua
 lua require'colorizer'.setup()
 
 " ======= MARKDOWN FOLDING ==========
@@ -195,12 +195,11 @@ call minpac#init()
 call minpac#add('andymass/vim-matchup')
 call minpac#add('editorconfig/editorconfig-vim')
 call minpac#add('hauleth/sad.vim')
-call minpac#add('junegunn/gv.vim')
-call minpac#add('junegunn/limelight.vim')
+call minpac#add('justinmk/vim-sneak')
+call minpac#add('haya14busa/vim-asterisk')
+call minpac#add('mtth/scratch.vim')
 call minpac#add('junegunn/vim-easy-align')
 call minpac#add('junegunn/vim-peekaboo')
-call minpac#add('junegunn/vim-slash')
-call minpac#add('justinmk/vim-dirvish')
 call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('lifepillar/vim-colortemplate')
 call minpac#add('ludovicchabant/vim-gutentags')
@@ -232,6 +231,7 @@ call minpac#add('purescript-contrib/purescript-vim')
 call minpac#add('tbastos/vim-lua')
 call minpac#add('vmchale/dhall-vim')
 call minpac#add('yuezk/vim-js')
+call minpac#add('hashivim/vim-terraform')
 
 " ==============================
 " =           THEMES           =
@@ -253,6 +253,7 @@ call minpac#add('masukomi/vim-markdown-folding')
 " ========= NVIM-LSP ================
 " https://neovim.io/doc/user/lsp.html
 
+call minpac#add('neovim/nvim-lspconfig', {'type': 'opt'})
 command! -bar -nargs=0 RestartLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients()); vim.cmd("edit")
 function! MyHighlights() abort
     highlight LspDiagnosticsUnderline gui=undercurl
@@ -267,7 +268,7 @@ augroup MyColors
     autocmd ColorScheme * call MyHighlights()
 augroup END
 
-packadd nvim-lsp
+packadd nvim-lspconfig
 lua <<EOF
 local nvim_lsp = require'nvim_lsp'
 local buf_set_keymap = vim.api.nvim_buf_set_keymap
@@ -329,7 +330,7 @@ call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
 packadd nvim-treesitter
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {},     -- one of "all", "language", or a list of languages
+  ensure_installed = "all",     -- one of "all", "language", or a list of languages
   highlight = {
     enable = true,              -- false will disable the whole extension
     disable = {},  -- list of language that will be disabled
