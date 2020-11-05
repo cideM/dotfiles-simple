@@ -2,5 +2,7 @@
 
 # https://discourse.nixos.org/t/migrating-from-homebrew-to-nix-for-osx/2892
 
-brew leaves > pkgs/"$(hostname)".txt
-brew list --cask > pkgs/"$(hostname)"_cask.txt
+package_dir=packages_per_host
+
+brew leaves > "$package_dir"/"$(hostname)".txt
+brew list --cask > "$package_dir"/"$(hostname)"_cask.txt

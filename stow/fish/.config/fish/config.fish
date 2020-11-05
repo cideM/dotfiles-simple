@@ -4,9 +4,17 @@ set -x FZF_CTRL_T_OPTS "--preview bat {}'"
 set -x FZF_ALT_C_OPTS "--preview 'tree -a -C {} | head -200'"
 set -x FZF_CTRL_T_COMMAND 'fd -L $dir --type f 2> /dev/null'
 
-# https://github.com/fish-shell/fish-shell/issues/3412
-# https://github.com/fish-shell/fish-shell/issues/5313
-set -u fish_pager_color_prefix 'red' '--underline'
+# Should be in /usr/share/fish/vendor_functions.d/ on a normal linux installation
+if type -q fzf_key_bindings
+    fzf_key_bindings
+end
+
+alias fzf 'fzf --color=light'
+
+# Most color schemes are broken and don't work with pager prefixes anyway.
+for color in (set | grep -Eo '^fish_color_[a-zA-Z0-9_]+')
+    set $color normal
+end
 
 set -x BAT_THEME "Monokai Extended Light"
 
@@ -32,24 +40,9 @@ set -x PATH                 \
     ~/.cargo/bin            \
     $PATH
 
-abbr -a g 'git'
-alias fzf 'fzf --color=light'
+abbr -a kubedebug 'kubectl run -i --tty --rm debug --image=radial/busyboxplus:curl --restart=Never -- sh'
 alias dash 'dash -E'
 
-# Should be in /usr/share/fish/vendor_functions.d/ on a normal linux installation
-if type -q fzf_key_bindings
-    fzf_key_bindings
+if test -f "$HOME/.config/fish/(hostname -s).fish"
+  source "$HOME/.config/fish/(hostname -s).fish"
 end
-
-switch (uname)
-	case Linux
-		set -x SHELL /bin/fish
-	case Darwin
-		contains /usr/local/opt/coreutils/libexec/gnubin $PATH
-		or set -x PATH /usr/local/opt/coreutils/libexec/gnubin $PATH
-
-		contains /opt/local/bin $PATH
-		or set -x PATH /opt/local/bin $PATH
-end
-
-eval (direnv hook fish)

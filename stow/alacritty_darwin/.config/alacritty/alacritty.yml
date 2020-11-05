@@ -1,35 +1,31 @@
-# Colors (PaperColor - Light)
+# Colors (Iceberg Light)
 colors:
   # Default colors
   primary:
-    background: '0xeeeeee'
-    foreground: '0x878787'
-
-  cursor:
-    text: '0xeeeeee'
-    cursor: '0x878787'
+    background: '#e8e9ec'
+    foreground: '#33374c'
 
   # Normal colors
   normal:
-    black:   '0xeeeeee'
-    red:     '0xaf0000'
-    green:   '0x008700'
-    yellow:  '0x5f8700'
-    blue:    '0x0087af'
-    magenta: '0x878787'
-    cyan:    '0x005f87'
-    white:   '0x444444'
+    black:   '#dcdfe7'
+    red:     '#cc517a'
+    green:   '#668e3d'
+    yellow:  '#c57339'
+    blue:    '#2d539e'
+    magenta: '#7759b4'
+    cyan:    '#3f83a6'
+    white:   '#33374c'
 
   # Bright colors
   bright:
-    black:   '0xbcbcbc'
-    red:     '0xd70000'
-    green:   '0xd70087'
-    yellow:  '0x8700af'
-    blue:    '0xd75f00'
-    magenta: '0xd75f00'
-    cyan:    '0x005faf'
-    white:   '0x005f87'
+    black:   '#8389a3'
+    red:     '#cc3768'
+    green:   '#598030'
+    yellow:  '#b6662d'
+    blue:    '#22478e'
+    magenta: '#6845ad'
+    cyan:    '#327698'
+    white:   '#262a3f'
 draw_bold_text_with_bright_colors: false
 dynamic_title: true
 env:
