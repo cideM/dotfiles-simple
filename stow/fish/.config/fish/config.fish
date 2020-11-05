@@ -51,3 +51,5 @@ switch (uname)
 		contains /opt/local/bin $PATH
 		or set -x PATH /opt/local/bin $PATH
 end
+
+eval (direnv hook fish)
