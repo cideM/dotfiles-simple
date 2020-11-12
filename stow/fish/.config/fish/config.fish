@@ -21,6 +21,7 @@ set -x GO111MODULE on
 
 set -x VISUAL nvim
 set -x EDITOR nvim
+set -x GOPATH ~/go
 
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 # XDG_RUNTIME_DIR should be set by pam_systemd
@@ -28,7 +29,7 @@ set -x XDG_CONFIG_HOME $HOME/.config
 set -x XDG_DATA_HOME $HOME/.local/share
 set -x XDG_CACHE_HOME $HOME/.cache
 
-for p in ~/.local/bin ~/bin ~/.emacs.d/bin ~/.cargo/bin
+for p in ~/.local/bin ~/bin ~/.emacs.d/bin ~/.cargo/bin ~/go/bin ~/.go/bin
     if not contains $p $PATH
         set -a PATH $p
     end
