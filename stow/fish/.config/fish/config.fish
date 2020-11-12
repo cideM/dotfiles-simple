@@ -11,11 +11,6 @@ end
 
 alias fzf 'fzf --color=light'
 
-# Most color schemes are broken and don't work with pager prefixes anyway.
-for color in (set | grep -Eo '^fish_color_[a-zA-Z0-9_]+')
-    set $color normal
-end
-
 set -x BAT_THEME "Monokai Extended Light"
 
 set -x LANG en_US.UTF-8
@@ -41,6 +36,9 @@ set -x PATH                 \
     $PATH
 
 abbr -a kubedebug 'kubectl run -i --tty --rm debug --image=radial/busyboxplus:curl --restart=Never -- sh'
+abbr -a g 'git'
+abbr -a dc 'docker-compose'
+abbr -a tf 'terraform'
 alias dash 'dash -E'
 
 if test -f "$HOME/.config/fish/(hostname -s).fish"

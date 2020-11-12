@@ -14,3 +14,14 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
     required = true
+[alias]
+    lg = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    s = status
+    a = add
+    co = commit
+    ch = checkout
+    b = branch
+    cb = rev-parse --abbrev-ref HEAD
+    d = diff
+    pl = pull
+    ps = push
