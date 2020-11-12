@@ -20,6 +20,6 @@ $ fisher
 MacOS:
 
 ```shell
-$ for dir in stow/{alacritty_darwin, fish, git, nvim}; stow --dir stow --target $HOME -S (basename $dir); end
+$ for dir in stow/{alacritty_darwin, fish, git, nvim, tmux}; stow --dir stow --target $HOME -S (basename $dir); end
 $ fisher
 ```
