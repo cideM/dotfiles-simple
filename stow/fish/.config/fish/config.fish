@@ -28,12 +28,11 @@ set -x XDG_CONFIG_HOME $HOME/.config
 set -x XDG_DATA_HOME $HOME/.local/share
 set -x XDG_CACHE_HOME $HOME/.cache
 
-set -x PATH                 \
-    ~/.local/bin            \
-    ~/bin                   \
-    ~/.emacs.d/bin          \
-    ~/.cargo/bin            \
-    $PATH
+for p in ~/.local/bin ~/bin ~/.emacs.d/bin ~/.cargo/bin
+    if not contains $p $PATH
+        set -a PATH $p
+    end
+end
 
 abbr -a kubedebug 'kubectl run -i --tty --rm debug --image=radial/busyboxplus:curl --restart=Never -- sh'
 abbr -a g 'git'
@@ -42,5 +41,5 @@ abbr -a tf 'terraform'
 alias dash 'dash -E'
 
 if test -f "$HOME/.config/fish/(hostname -s).fish"
-  source "$HOME/.config/fish/(hostname -s).fish"
+    source "$HOME/.config/fish/(hostname -s).fish"
 end
