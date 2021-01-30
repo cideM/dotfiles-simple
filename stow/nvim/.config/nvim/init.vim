@@ -267,7 +267,7 @@ lua <<EOF
   }
 EOF
 
-call minpac#add('Olical/conjure',{'type':'opt'})
+call minpac#add('Olical/conjure')
 call minpac#add('cidem/neovim-set-path')
 call minpac#add('justinmk/vim-dirvish')
 call minpac#add('cocopon/iceberg.vim')

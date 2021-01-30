@@ -1,4 +1,3 @@
-packadd conjure
 packadd parinfer-rust
 
 let current_compiler="clj-kondo"
