@@ -4,14 +4,36 @@ set -x FZF_CTRL_T_OPTS "--preview bat {}'"
 set -x FZF_ALT_C_OPTS "--preview 'tree -a -C {} | head -200'"
 set -x FZF_CTRL_T_COMMAND 'fd -L $dir --type f 2> /dev/null'
 
-# Should be in /usr/share/fish/vendor_functions.d/ on a normal linux installation
+# COLORS
+# https://github.com/fish-shell/fish-shell/issues/4695
+# https://fishshell.com/docs/2.0/index.html
+# $ set | rg color
+# $ set_color -c
+# $ nix-shell -p gettext
+# $ msgcat --color=test
+
+# Background of tab completion and matched part in history
+set fish_color_search_match --background=yellow
+
+set fish_pager_color_prefix normal --bold
+set fish_pager_color_description normal
+set fish_pager_color_progress normal
+
+# https://github.com/fish-shell/fish-shell/issues/5527
+set fish_color_match normal --underline
+
+set fish_color_comment --italics
+set fish_color_command magenta
+set fish_color_quote green
+set fish_color_error red --bold
+
 if type -q fzf_key_bindings
     fzf_key_bindings
 end
 
 alias fzf 'fzf --color=light'
 
-set -x BAT_THEME "Monokai Extended Light"
+set -x BAT_THEME "OneHalfLight"
 
 set -x LANG en_US.UTF-8
 set -x LC_ALL en_US.UTF-8
@@ -35,11 +57,15 @@ for p in ~/.local/bin ~/bin ~/.emacs.d/bin ~/.cargo/bin ~/go/bin ~/.go/bin
     end
 end
 
+# https://discourse.nixos.org/t/how-is-nix-path-managed-regarding-nix-channel/6079/3?u=cidem
+set -x NIX_PATH ~/.nix-defexpr/channels $NIX_PATH
+
 abbr -a kubedebug 'kubectl run -i --tty --rm debug --image=radial/busyboxplus:curl --restart=Never -- sh'
 abbr -a g 'git'
 abbr -a dc 'docker-compose'
 abbr -a tf 'terraform'
 alias dash 'dash -E'
+alias niv 'niv --no-colors'
 
 if test -f "$HOME/.config/fish/(hostname -s).fish"
     source "$HOME/.config/fish/(hostname -s).fish"

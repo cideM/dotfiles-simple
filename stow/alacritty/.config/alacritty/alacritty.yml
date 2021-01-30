@@ -1,58 +1,59 @@
-# Colors (Iceberg Light)
 colors:
-  # Default colors
   primary:
-    background: "#e8e9ec"
-    foreground: "#33374c"
+    foreground: '#171421'
+    background: '#ffffff'
+    bright_foreground: '#5e5c64'
 
-  # Normal colors
   normal:
-    black: "#dcdfe7"
-    red: "#cc517a"
-    green: "#668e3d"
-    yellow: "#c57339"
-    blue: "#2d539e"
-    magenta: "#7759b4"
-    cyan: "#3f83a6"
-    white: "#33374c"
+    black:   '#171421'
+    red:     '#c01c28'
+    green:   '#26a269'
+    yellow:  '#a2734c'
+    blue:    '#12488b'
+    magenta: '#a347ba'
+    cyan:    '#2aa1b3'
+    white:   '#d0cfcc'
 
-  # Bright colors
   bright:
-    black: "#8389a3"
-    red: "#cc3768"
-    green: "#598030"
-    yellow: "#b6662d"
-    blue: "#22478e"
-    magenta: "#6845ad"
-    cyan: "#327698"
-    white: "#262a3f"
+    black:   '#5e5c64'
+    red:     '#f66151'
+    green:   '#33d17a'
+    yellow:  '#e9ad0c'
+    blue:    '#2a7bde'
+    magenta: '#c061cb'
+    cyan:    '#33c7de'
+    white:   '#ffffff'
 draw_bold_text_with_bright_colors: false
-env:
-  TERM: alacritty
 font:
+  bold:
+    family: Operator Mono SSm
+    style: Medium
+  bold_italic:
+    family: Operator Mono SSm
+    style: Medium Italic
+  italic:
+    family: Operator Mono SSm
+    style: Book Italic
+  normal:
+    family: Operator Mono SSm
+    style: Book
   glyph_offset:
     x: 0
     y: 2
   offset:
     x: 0
     y: 4
-  size: 15
-  use_thin_strokes: true
+  size: 14
+live_config_reload: true
 window:
-  dynamic_title: true
   decorations: full
   dynamic_padding: true
   padding:
     x: 10
     y: 10
-  position:
-    x: 0
-    y: 0
   startup_mode: Windowed
-  title: Alacritty
 key_bindings:
-  - { key: N, mods: Alt|Control, action: "SpawnNewInstance" }
-
+  - { key: N, mods: Control|Alt, action: "SpawnNewInstance" }
   - { key: A, mods: Alt, chars: "\x1ba" }
   - { key: B, mods: Alt, chars: "\x1bb" }
   - { key: C, mods: Alt, chars: "\x1bc" }
@@ -79,7 +80,6 @@ key_bindings:
   - { key: X, mods: Alt, chars: "\x1bx" }
   - { key: Y, mods: Alt, chars: "\x1by" }
   - { key: Z, mods: Alt, chars: "\x1bz" }
-
   - { key: A, mods: Alt|Shift, chars: "\x1bA" }
   - { key: B, mods: Alt|Shift, chars: "\x1bB" }
   - { key: C, mods: Alt|Shift, chars: "\x1bC" }
@@ -106,7 +106,6 @@ key_bindings:
   - { key: X, mods: Alt|Shift, chars: "\x1bX" }
   - { key: Y, mods: Alt|Shift, chars: "\x1bY" }
   - { key: Z, mods: Alt|Shift, chars: "\x1bZ" }
-
   - { key: Key0, mods: Alt, chars: "\x1b0" }
   - { key: Key1, mods: Alt, chars: "\x1b1" }
   - { key: Key2, mods: Alt, chars: "\x1b2" }
@@ -117,7 +116,6 @@ key_bindings:
   - { key: Key7, mods: Alt, chars: "\x1b7" }
   - { key: Key8, mods: Alt, chars: "\x1b8" }
   - { key: Key9, mods: Alt, chars: "\x1b9" }
-
   - { key: Key0, mods: Alt|Shift, chars: "\x1b!" }
   - { key: Key1, mods: Alt|Shift, chars: "\x1b@" }
   - { key: Key2, mods: Alt|Shift, chars: "\x1b#" }
@@ -128,7 +126,6 @@ key_bindings:
   - { key: Key7, mods: Alt|Shift, chars: "\x1b*" }
   - { key: Key8, mods: Alt|Shift, chars: "\x1b(" }
   - { key: Key9, mods: Alt|Shift, chars: "\x1b)" }
-
   - { key: Key0, mods: Command, chars: "\x080" }
   - { key: Key1, mods: Command, chars: "\x081" }
   - { key: Key2, mods: Command, chars: "\x082" }
@@ -139,20 +136,18 @@ key_bindings:
   - { key: Key7, mods: Command, chars: "\x087" }
   - { key: Key8, mods: Command, chars: "\x088" }
   - { key: Key9, mods: Command, chars: "\x089" }
-
   - { key: Semicolon, mods: Alt, chars: "\x1b;" }
-  - { key: Comma, mods: Alt, chars: "\x1b," }
-  - { key: Period, mods: Alt, chars: "\x1b." }
-  - { key: LBracket, mods: Alt, chars: "\x1b[" }
-  - { key: RBracket, mods: Alt, chars: "\x1b]" }
-  - { key: Slash, mods: Alt, chars: "\x1b/" }
-  - { key: Space, mods: Alt, chars: "\x1b " }
+  - { key: Comma,     mods: Alt, chars: "\x1b," }
+  - { key: Period,    mods: Alt, chars: "\x1b." }
+  - { key: LBracket,  mods: Alt, chars: "\x1b[" }
+  - { key: RBracket,  mods: Alt, chars: "\x1b]" }
+  - { key: Slash,     mods: Alt, chars: "\x1b/" }
+  - { key: Space,     mods: Alt, chars: "\x1b " }
   - { key: Backslash, mods: Alt, chars: "\x1b\\" }
-
   - { key: Semicolon, mods: Alt|Shift, chars: "\x1b:" }
-  - { key: Comma, mods: Alt|Shift, chars: "\x1b<" }
-  - { key: Period, mods: Alt|Shift, chars: "\x1b>" }
-  - { key: LBracket, mods: Alt|Shift, chars: "\x1b{" }
-  - { key: RBracket, mods: Alt|Shift, chars: "\x1b}" }
-  - { key: Slash, mods: Alt|Shift, chars: "\x1b?" }
+  - { key: Comma,     mods: Alt|Shift, chars: "\x1b<" }
+  - { key: Period,    mods: Alt|Shift, chars: "\x1b>" }
+  - { key: LBracket,  mods: Alt|Shift, chars: "\x1b{" }
+  - { key: RBracket,  mods: Alt|Shift, chars: "\x1b}" }
+  - { key: Slash,     mods: Alt|Shift, chars: "\x1b?" }
   - { key: Backslash, mods: Alt|Shift, chars: "\x1b|" }

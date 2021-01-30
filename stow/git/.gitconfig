@@ -1,27 +1,36 @@
-[push]
-    default = simple
-[pull]
-    rebase = true
-[user]
-    email = yuuki@protonmail.com
-    name = Florian Beeres
-[github]
-    user = yuuki@protonmail.com
-[core]
-    editor = nvim
-[filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
 [alias]
-    lg = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    s = status
-    a = add
-    co = commit
-    ch = checkout
-    b = branch
-    cb = rev-parse --abbrev-ref HEAD
-    d = diff
-    pl = pull
-    ps = push
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	recent = branch --sort=-committerdate
+	unpushed = log --branches --not --remotes --no-walk --decorate --oneline
+	s = status -s
+	a = add
+	co = commit
+	ch = checkout
+	b = branch
+	cb = rev-parse --abbrev-ref HEAD
+	d = diff
+	pl = pull
+	ps = push
+
+[push]
+	default = simple
+
+[pull]
+	rebase = true
+
+[user]
+	email = yuuki@protonmail.com
+	name = Florian Beeres
+
+[github]
+	user = "yuuki@protonmail.com";
+
+[core]
+	editor = nvim
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+

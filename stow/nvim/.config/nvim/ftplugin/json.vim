@@ -1,5 +1,3 @@
-let b:undo_ftplugin="setlocal formatprg< foldmethod<"
+let b:undo_ftplugin="setlocal formatprg<"
 
-setlocal foldmethod=indent
-
-let &l:formatprg = 'prettier --stdin-filepath %'
+setlocal formatprg = 'prettier --stdin-filepath'

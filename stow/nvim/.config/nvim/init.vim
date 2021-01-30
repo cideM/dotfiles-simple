@@ -1,70 +1,78 @@
+packadd minpac
+call minpac#init()
+
 " ==============================
 " =       GENERAL SETTINGS     =
 " ==============================
+" Don't load the built-in plugin so that the custom 'matchup' plugin is the
+" only such plugin that is active.
+" This doesn't seem to work
+let g:loaded_matchit = 1
+
 set background=light
-set formatoptions-=t
+set nocursorline
+set nonumber
+set norelativenumber
+set shiftwidth=2
+set tabstop=4
+set nolist
+set formatoptions=tcrqjn
 set wildignore+=*/.git/*,
-            \*/node_modules/*,
-            \*/build/*,
-            \*/dist/*,
-            \*/compiled/*,
-            \*/tmp/*
-set diffopt=algorithm:patience,filler,indent-heuristic,closeoff
+	  \*/node_modules/*,
+	  \*/build/*,
+	  \*/dist/*,
+	  \*/compiled/*,
+	  \*/tmp/*
+set diffopt=algorithm:patience,filler,indent-heuristic,closeoff,iwhite
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 set hidden
-set signcolumn=yes:2
+set signcolumn=auto:2
 set ignorecase
-set completeopt-=preview
+set completeopt=menu,menuone,noselect
 set smartcase
 set inccommand=split
 set path-=/usr/include
 set splitbelow
+" I use Fish but it makes everything in Neovim a bit slower if it's used as
+" shell, especially Fugitive stuff
+set shell=bash
 set foldlevelstart=99
 set splitright
 set termguicolors
 set undofile
 
-" https://github.com/neovim/neovim/issues/13113
-" EVERYTHING. IS. BROKEN. ALL THE FUCKING TIME
-" You open your favorite program and one day it's broken! Why? THE FUCK DO I
-" CARE. There's not a single fucking program developed in the last 10 years
-" that's not broken ALL THE FUCKING TIME.
-augroup FUCK_EVERYTHING
-    autocmd!
-    autocmd Filetype typescript setlocal formatexpr=
-augroup END
-
-" Automatically resize windows if host window changes (e.g., creating a tmux
-" split)
-augroup Resize
-    autocmd!
-    autocmd VimResized * wincmd =
-augroup END
-
-augroup quickfix
-    autocmd!
-    autocmd QuickFixCmdPost [^l]* cwindow
-    autocmd QuickFixCmdPost l* lwindow
-augroup END
-
 " ==============================
 " =        COLORSCHEME         =
 " ==============================
-let g:one_allow_italics = 1
-let g:yui_comments = "emphasize"
-colorscheme space_vim_theme
+let g:tokyonight_enable_italic = 1
+let g:tokyonight_style = 'storm'
+call minpac#add('cidem/yui',{'branch':'v2'})
+colorscheme yui
+
+" https://github.com/neovim/neovim/issues/13113
+augroup Foo
+  autocmd!
+  autocmd Filetype typescript setlocal formatexpr=
+augroup END
+
+augroup quickfix
+  autocmd!
+  autocmd QuickFixCmdPost [^l]* cwindow
+  autocmd QuickFixCmdPost l* lwindow
+augroup END
 
 " Call my own SetPath function so that every git file is added to path. Let's
 " me get most of FZF without using FZF
 augroup SetPath
-    autocmd!
-    autocmd BufEnter,DirChanged * call pathutils#SetPath()
-augroup END
+  autocmd!
+  autocmd BufEnter,DirChanged * call pathutils#SetPath()
+  augroup END
+command! -nargs=0 UpdatePath :call pathutils#SetPath()
 
 " Built-in Neovim feature that highlights yanked code.
 augroup highlight_yank
-    autocmd!
-    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+  autocmd!
+  autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
 
 " Format the buffer with the current formatprg. Most of the custom code here
@@ -80,15 +88,16 @@ function! FormatBuffer()
   call winrestview(view)
 endfunction
 
-" ==============================
-" =          MAPPINGS          =
-" ==============================
+command! -bar -nargs=1 Find new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd <args>
+command! -bar -nargs=1 FindAll new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd -uu <args>
+command! -bar -nargs=1 FindV vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd <args>
+command! -bar -nargs=1 FindAllV vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd -uu <args>
+
 let mapleader = " "
 let maplocalleader = ","
 
-" ==============================
-" =          TERMINAL          =
-" ==============================
+nnoremap <leader>/  :nohlsearch<CR>
+
 tnoremap <Esc>      <C-\><C-n>
 tnoremap <A-h>      <C-\><C-N><C-w>h
 tnoremap <A-j>      <C-\><C-N><C-w>j
@@ -103,7 +112,8 @@ nnoremap <A-j>      <C-w>j
 nnoremap <A-k>      <C-w>k
 nnoremap <A-l>      <C-w>l
 " Open terminal in directory of current file
-nnoremap <leader>t  :split <Bar> lcd %:p:h <Bar> term<CR>
+nnoremap <leader>T  :split <Bar> lcd %:p:h <Bar> term fish<CR>
+nnoremap <leader>t  :split <Bar> term fish<CR>
 
 " Leave insert mode with jk
 imap jk             <Esc>
@@ -113,14 +123,14 @@ nnoremap <leader>gg :grep!<space>
 nnoremap <leader>gw :grep! -wF ""<left>
 
 " Just calls formatprg on entire buffer
-nmap     <leader>Q  :call FormatBuffer()<cr>
+nmap     <leader>q  :call FormatBuffer()<cr>
 
 nnoremap <leader>f  :find *
 nnoremap <leader>b  :ls<cr>:buffer<Space>
 
 vmap     <Enter>    <Plug>(EasyAlign)
 
-nnoremap <leader>s  :nohlsearch<CR>
+nnoremap <leader>n  :nohlsearch<CR>
 
 " Reflow comments according to max line length. This temporarily unsets
 " formatprg so cindent (?) is used. I don't know... this mostly just works.
@@ -130,46 +140,13 @@ vnoremap <leader>R  :<C-u>call reflow#Comment(visualmode())<cr>
 " Switch to alternate buffer with backspace
 nnoremap <BS>       <C-^>
 
-" ==============================
-" =          PLUGINS           =
-" ==============================
-
-" ======= EDITORCONFIG ==============
-let g:EditorConfig_max_line_indicator = "exceeding"
-let g:EditorConfig_preserve_formatoptions = 1
-
-" ======= NVIM COLORIZER ============
-packadd nvim-colorizer.lua
-lua require'colorizer'.setup()
-
-" ======= MARKDOWN FOLDING ==========
-let g:markdown_fold_style = 'nested'
-
-" ======= SAD =======================
-" Sad makes replacing selections easier and just automates some tedious
-" plumbing around slash search and cgn.
-map <leader>c <Plug>(sad-change-forward)
-map <leader>C <Plug>(sad-change-backward)
-
-" ======= ASTERISK ==================
-" This should override the mappings for * and # which are provided by sad.
-" Use stay motions per default, meaning pressing * won't jump to the first
-" match.
-map *  <Plug>(asterisk-z*)
-map #  <Plug>(asterisk-z#)
-map g* <Plug>(asterisk-gz*)
-map g# <Plug>(asterisk-gz#)
-
-" ======= MATCHUP ===================
-" Otherwise the status line is overwritten with matching code parts
-let g:matchup_matchparen_offscreen = {}
-
-" ======= GUTENTAGS =================
-" No ctags for Haskell
-let g:gutentags_exclude_filetypes = ['haskell', 'purs', 'purescript']
-let g:gutentags_file_list_command = 'rg\ --files'
+" ======= SAYONARA ==================
+call minpac#add('mhinz/vim-sayonara')
+map Q :Sayonara<CR> " delete buffer and close window
+map <leader>Q :Sayonara!<CR> " delete buffer and preserve window
 
 " ======= SNEAK =====================
+call minpac#add('justinmk/vim-sneak')
 let g:sneak#label      = 1
 let g:sneak#use_ic_scs = 1
 map f <Plug>Sneak_f
@@ -182,162 +159,136 @@ omap O <Plug>Sneak_S
 map <leader>j <Plug>Sneak_s
 map <leader>k <Plug>Sneak_S
 
-" ==============================
-" =       LOAD PLUGINS         =
-" ==============================
-packadd minpac
-
-call minpac#init()
-
-" ==============================
-" =     GENERAL PLUGINS        =
-" ==============================
-call minpac#add('andymass/vim-matchup')
-call minpac#add('editorconfig/editorconfig-vim')
+" ======= SAD =======================
+" Sad makes replacing selections easier and just automates some tedious
+" plumbing around slash search and cgn.
 call minpac#add('hauleth/sad.vim')
-call minpac#add('dstein64/vim-startuptime')
-call minpac#add('justinmk/vim-sneak')
-call minpac#add('haya14busa/vim-asterisk')
-call minpac#add('mtth/scratch.vim')
-call minpac#add('junegunn/vim-easy-align')
-call minpac#add('junegunn/vim-peekaboo')
-call minpac#add('k-takata/minpac', {'type': 'opt'})
-call minpac#add('lifepillar/vim-colortemplate')
+map <leader>c <Plug>(sad-change-forward)
+map <leader>C <Plug>(sad-change-backward)
+
+" ======= EDITORCONFIG ==============
+call minpac#add('editorconfig/editorconfig-vim')
+let g:EditorConfig_max_line_indicator = "exceeding"
+let g:EditorConfig_preserve_formatoptions = 1
+
+" ======= MARKDOWN FOLDING ==========
+call minpac#add('masukomi/vim-markdown-folding')
+let g:markdown_fold_style = "nested"
+
+" ======= GUTENTAGS =================
+" No ctags for Haskell
 call minpac#add('ludovicchabant/vim-gutentags')
+let g:gutentags_exclude_filetypes = ["haskell", "purs", "purescript"]
+let g:gutentags_file_list_command = 'rg\ --files'
+
+" ======= MATCHUP ===================
+" Otherwise the status line is overwritten with matching code parts
+call minpac#add('andymass/vim-matchup')
+let g:matchup_matchparen_offscreen = {}
+
+" ========= NVIM-LSP ================
+" https://neovim.io/doc/user/lsp.html
+call minpac#add('neovim/nvim-lspconfig', {'type':'opt'})
+packadd nvim-lspconfig
+command! -bar -nargs=0 RestartLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients()); vim.cmd("edit")
+
+lua <<EOF
+  local nvim_lsp = require'lspconfig'
+  local buf_set_keymap = vim.api.nvim_buf_set_keymap
+  local api = vim.api
+
+  local on_attach = function(_, bufnr)
+	api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+	-- Mappings.
+	local opts = { noremap=true, silent=true }
+	buf_set_keymap(bufnr, 'n', '<localleader>K',  '<cmd>lua vim.lsp.buf.hover()<CR>',                        opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>h',  '<cmd>lua vim.lsp.buf.signature_help()<CR>',               opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>re', '<cmd>lua vim.lsp.buf.rename()<CR>',                       opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>rr', '<cmd>lua vim.lsp.buf.references()<CR>',                   opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>ri', '<cmd>lua vim.lsp.buf.implementation()<CR>',               opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>gd', '<cmd>lua vim.lsp.buf.definition()<CR>',                   opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>',              opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>',                  opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>p',  '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>ws', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>',             opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>ds', '<cmd>lua vim.lsp.buf.document_symbol()<CR>',              opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>dh', '<cmd>lua vim.lsp.buf.document_highlight()<CR>',           opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>sr', '<cmd>lua vim.lsp.buf.server_ready()<CR>',                 opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>j',  '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',             opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>k',  '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',             opts)
+	buf_set_keymap(bufnr, 'n', '<localleader>l',  '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',           opts)
+  end
+
+  local configs = require'lspconfig/configs'
+
+  nvim_lsp.util.default_config = vim.tbl_extend(
+	"force",
+	nvim_lsp.util.default_config,
+	{ on_attach = on_attach }
+  )
+
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+	vim.lsp.diagnostic.on_publish_diagnostics, {
+	  virtual_text = false,
+	  signs = false,
+	  update_in_insert = false,
+	}
+  )
+
+  nvim_lsp.rust_analyzer.setup{}
+  nvim_lsp.gopls.setup{}
+  nvim_lsp.hls.setup{}
+  nvim_lsp.dhall_lsp_server.setup{}
+EOF
+
+" ========= NVIM-COMPE ==============
+" Seems to be a bug in the library. It tries to require another plugin. Should
+" report upstream
+let g:loaded_compe_snippets_nvim=1
+call minpac#add('hrsh7th/nvim-compe')
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+lua <<EOF
+  require'compe'.setup {
+	enabled = true;
+	debug = false;
+	min_length = 1;
+	preselect = 'always';
+	allow_prefix_unmatch = false;
+	source = {
+	  path = true;
+	  buffer = true;
+	  vsnip = false;
+	  nvim_lsp = true;
+	  snippets_nvim = false;
+	};
+  }
+EOF
+
+call minpac#add('Olical/conjure',{'type':'opt'})
+call minpac#add('cidem/neovim-set-path')
+call minpac#add('justinmk/vim-dirvish')
+call minpac#add('cocopon/iceberg.vim')
+call minpac#add('eraserhd/parinfer-rust',{'do':'!cargo build --release','type':'opt'})
+call minpac#add('junegunn/vim-easy-align')
+call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('machakann/vim-sandwich')
-call minpac#add('mattn/vim-gist')
-call minpac#add('michaeljsmith/vim-indent-object')
-call minpac#add('simnalamburt/vim-mundo')
+call minpac#add('romainl/Apprentice')
 call minpac#add('sonph/onehalf', {'dir': 'vim'})
 call minpac#add('tpope/vim-commentary')
 call minpac#add('tpope/vim-eunuch')
 call minpac#add('tpope/vim-fugitive')
-call minpac#add('tpope/vim-vinegar')
 call minpac#add('tpope/vim-repeat')
 call minpac#add('tpope/vim-rhubarb')
+call minpac#add('tpope/vim-scriptease')
 call minpac#add('tpope/vim-unimpaired')
-call minpac#add('wellle/targets.vim')
-call minpac#add('wellle/visual-split.vim')
-call minpac#add('norcalli/nvim-colorizer.lua', {'type': 'opt'})
-packadd nvim-colorizer.lua
-lua require'colorizer'.setup()
-
-" ==============================
-" =     FILETYPE & SYNTAX      =
-" ==============================
-call minpac#add('HerringtonDarkholme/yats.vim')
-call minpac#add('LnL7/vim-nix')
-call minpac#add('martinda/Jenkinsfile-vim-syntax')
-call minpac#add('MaxMEllon/vim-jsx-pretty')
 call minpac#add('purescript-contrib/purescript-vim')
-call minpac#add('tbastos/vim-lua')
+call minpac#add('LnL7/vim-nix')
 call minpac#add('vmchale/dhall-vim')
 call minpac#add('yuezk/vim-js')
-call minpac#add('hashivim/vim-terraform')
-
-" ==============================
-" =           THEMES           =
-" ==============================
-call minpac#add('arcticicestudio/nord-vim')
-call minpac#add('cidem/yui')
-call minpac#add('cocopon/iceberg.vim')
-call minpac#add('junegunn/seoul256.vim')
-call minpac#add('NLKNguyen/papercolor-theme')
-call minpac#add('rakr/vim-one')
-call minpac#add('romainl/Apprentice')
-call minpac#add('liuchengxu/space-vim-theme')
-
-" ==============================
-" =   LANGUAGE SPECIFIC        =
-" ==============================
-call minpac#add('masukomi/vim-markdown-folding')
-
-" ========= NVIM-LSP ================
-" https://neovim.io/doc/user/lsp.html
-
-call minpac#add('neovim/nvim-lspconfig', {'type': 'opt'})
-command! -bar -nargs=0 RestartLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients()); vim.cmd("edit")
-function! MyHighlights() abort
-    highlight LspDiagnosticsUnderline gui=undercurl
-    " Those are the actual messages in the popup, not the text/code in the
-    " buffer
-    " highlight link LspDiagnosticsWarning WarningMsg
-    " highlight link LspDiagnosticsError ErrorMsg
-endfunction
-
-augroup MyColors
-    autocmd!
-    autocmd ColorScheme * call MyHighlights()
-augroup END
-
-packadd nvim-lspconfig
-lua <<EOF
-local nvim_lsp = require'nvim_lsp'
-local buf_set_keymap = vim.api.nvim_buf_set_keymap
-local api = vim.api
-
-local on_attach = function(_, bufnr)
-    api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-    -- Mappings.
-    local opts = { noremap=true, silent=true }
-    buf_set_keymap(bufnr, 'n', '<localleader>k',  '<cmd>lua vim.lsp.buf.hover()<CR>',                 opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>h',  '<cmd>lua vim.lsp.buf.signature_help()<CR>',        opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>re', '<cmd>lua vim.lsp.buf.rename()<CR>',                opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>rr', '<cmd>lua vim.lsp.buf.references()<CR>',            opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>ri', '<cmd>lua vim.lsp.buf.implementation()<CR>',        opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>gd', '<cmd>lua vim.lsp.buf.definition()<CR>',            opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>',       opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>gD', '<cmd>lua vim.lsp.buf.declaration()<CR>',           opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>p',  '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>',opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>ws',  '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>',opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>ds',  '<cmd>lua vim.lsp.buf.document_symbol()<CR>',opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>dh',  '<cmd>lua vim.lsp.buf.document_highlight()<CR>',opts)
-    buf_set_keymap(bufnr, 'n', '<localleader>sr',  '<cmd>lua vim.lsp.buf.server_ready()<CR>',opts)
-
-    -- api.nvim_command [[autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()]]
-    -- api.nvim_command [[autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()]]
-    -- api.nvim_command [[autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()]]
-end
-
-local configs = require'nvim_lsp/configs'
-
-nvim_lsp.util.default_config = vim.tbl_extend(
-  "force",
-  nvim_lsp.util.default_config,
-  { on_attach = on_attach }
-)
-
-if not configs.dhall then
-    configs.dhall = {
-        default_config = {
-                cmd = {'dhall-lsp-server'};
-                filetypes = {'dhall'};
-                root_dir = function(fname)
-                    return vim.lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-                end;
-                settings = {};
-        };
-    }
-end
-
-nvim_lsp.purescriptls.setup{}
-nvim_lsp.rust_analyzer.setup{}
-nvim_lsp.gopls.setup{}
-nvim_lsp.dhall.setup{}
-EOF
-
-" ========= NVIM-TREESITTER =========
-call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
-packadd nvim-treesitter
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "all",     -- one of "all", "language", or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = {},  -- list of language that will be disabled
-  },
-}
-EOF
-
-packloadall
+call minpac#add('maxmellon/vim-jsx-pretty')
+call minpac#add('tbastos/vim-lua')
+call minpac#add('wellle/targets.vim')
+call minpac#add('yssl/QFEnter')
