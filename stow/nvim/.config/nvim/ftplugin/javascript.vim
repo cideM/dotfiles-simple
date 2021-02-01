@@ -3,7 +3,7 @@ let b:undo_ftplugin = ""
 setlocal formatprg=prettier\ --stdin-filepath
 let b:undo_ftplugin .= '|setlocal formatprg<'
 
-setlocal makeprg=eslint\ --format compact
+setlocal makeprg=eslint\ --format\ compact
 setlocal errorformat=%f:\ line\ %l\\,\ col\ %c\\,\ %m,%-G%.%#
 let b:undo_ftplugin .= '|setlocal makeprg<'
 

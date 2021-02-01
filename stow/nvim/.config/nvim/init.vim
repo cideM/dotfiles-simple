@@ -125,8 +125,8 @@ nnoremap <leader>gw :grep! -wF ""<left>
 " Just calls formatprg on entire buffer
 nmap     <leader>q  :call FormatBuffer()<cr>
 
-nnoremap <leader>f  :find *
-nnoremap <leader>b  :ls<cr>:buffer<Space>
+" nnoremap <leader>f  :find *
+" nnoremap <leader>b  :ls<cr>:buffer<Space>
 
 vmap     <Enter>    <Plug>(EasyAlign)
 
@@ -267,12 +267,51 @@ lua <<EOF
   }
 EOF
 
+" ======= FZF VIM ===================
+autocmd! FileType fzf set laststatus=0 noshowmode noruler
+			\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>fh :BLines<CR>
+nnoremap <leader>fc :Commits<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fg :GFiles<CR>
+nnoremap <leader>fm :Marks<CR>
+nnoremap <leader>ft :Tags<CR>
+nnoremap <leader>fj :BTags<CR>
+
+" Path completion with custom source command
+" Note that --relative-to=… expects a directory and DOES NOT check. That
+" means that you end up with an extra "../" if you request a path relative to a
+" file. – IBBoard Mar 13 '18 at 20:05
+inoremap <expr> <c-x><c-f> fzf#vim#complete("fd <Bar> xargs realpath --relative-to " . expand("%:h"))
+
+let g:fzf_colors =
+	\ { 'fg':      ['fg', 'Normal'],
+	\ 'bg':      ['bg', 'Normal'],
+	\ 'hl':      ['fg', 'Comment'],
+	\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+	\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+	\ 'hl+':     ['fg', 'Statement'],
+	\ 'info':    ['fg', 'PreProc'],
+	\ 'border':  ['fg', 'Ignore'],
+	\ 'prompt':  ['fg', 'Conditional'],
+	\ 'pointer': ['fg', 'Exception'],
+	\ 'marker':  ['fg', 'Keyword'],
+	\ 'spinner': ['fg', 'Label'],
+	\ 'header':  ['fg', 'Comment'] }
+
+
 call minpac#add('Olical/conjure')
 call minpac#add('cidem/neovim-set-path')
 call minpac#add('justinmk/vim-dirvish')
 call minpac#add('cocopon/iceberg.vim')
 call minpac#add('eraserhd/parinfer-rust',{'do':'!cargo build --release','type':'opt'})
 call minpac#add('junegunn/vim-easy-align')
+call minpac#add('junegunn/vim-peekaboo')
+call minpac#add('junegunn/fzf.vim')
+call minpac#add('junegunn/fzf')
 call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('machakann/vim-sandwich')
 call minpac#add('romainl/Apprentice')
@@ -288,6 +327,7 @@ call minpac#add('purescript-contrib/purescript-vim')
 call minpac#add('LnL7/vim-nix')
 call minpac#add('vmchale/dhall-vim')
 call minpac#add('yuezk/vim-js')
+call minpac#add('liuchengxu/space-vim-theme')
 call minpac#add('maxmellon/vim-jsx-pretty')
 call minpac#add('tbastos/vim-lua')
 call minpac#add('wellle/targets.vim')
