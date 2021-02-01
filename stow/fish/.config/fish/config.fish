@@ -67,6 +67,6 @@ abbr -a tf 'terraform'
 alias dash 'dash -E'
 alias niv 'niv --no-colors'
 
-if test -f "$HOME/.config/fish/(hostname -s).fish"
-    source "$HOME/.config/fish/(hostname -s).fish"
+if test -f $HOME/.config/fish/(hostname -s).fish
+    source $HOME/.config/fish/(hostname -s).fish
 end

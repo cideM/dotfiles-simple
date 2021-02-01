@@ -197,6 +197,10 @@ function fish_prompt
     set_color $lucid_cwd_color
     echo -sn $cwd
     set_color normal
+    
+    if test -n "$IN_NIX_SHELL"
+        echo -sn " (n)"
+    end
 
     if test $cwd != '~'
         set -l git_state (__lucid_git_status)
