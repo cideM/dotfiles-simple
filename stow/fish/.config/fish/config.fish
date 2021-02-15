@@ -4,6 +4,8 @@ set -x FZF_CTRL_T_OPTS "--preview bat {}'"
 set -x FZF_ALT_C_OPTS "--preview 'tree -a -C {} | head -200'"
 set -x FZF_CTRL_T_COMMAND 'fd -L $dir --type f 2> /dev/null'
 
+set -x FISH_NOTES_EXTENSION .md
+
 # COLORS
 # https://github.com/fish-shell/fish-shell/issues/4695
 # https://fishshell.com/docs/2.0/index.html
@@ -57,13 +59,16 @@ for p in ~/.local/bin ~/bin ~/.emacs.d/bin ~/.cargo/bin ~/go/bin ~/.go/bin
     end
 end
 
-# https://discourse.nixos.org/t/how-is-nix-path-managed-regarding-nix-channel/6079/3?u=cidem
-set -x NIX_PATH ~/.nix-defexpr/channels $NIX_PATH
-
 abbr -a kubedebug 'kubectl run -i --tty --rm debug --image=radial/busyboxplus:curl --restart=Never -- sh'
 abbr -a g 'git'
 abbr -a dc 'docker-compose'
 abbr -a tf 'terraform'
+abbr -a wn 'FISH_NOTES_DIR=$FISH_WORK_NOTES n'
+abbr -a work-agenda 'FISH_NOTES_DIR=$FISH_WORK_NOTES agenda'
+abbr -a work-new-agenda 'FISH_NOTES_DIR=$FISH_WORK_NOTES new-agenda'
+abbr -a work-notes 'FISH_NOTES_DIR=$FISH_WORK_NOTES notes'
+abbr -a work-todos 'FISH_NOTES_DIR=$FISH_WORK_NOTES todos'
+
 alias dash 'dash -E'
 alias niv 'niv --no-colors'
 

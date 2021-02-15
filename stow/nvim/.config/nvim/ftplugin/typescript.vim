@@ -12,3 +12,8 @@ let b:undo_ftplugin .= '|setlocal wildignore<'
 
 setlocal suffixesadd+=.ts,.tsx,.css
 let b:undo_ftplugin .= '|setlocal suffixesadd<'
+
+setlocal foldmethod=expr
+setlocal foldexpr=nvim_treesitter#foldexpr()
+let b:undo_ftplugin .= '|setlocal foldexpr<'
+let b:undo_ftplugin .= '|setlocal foldmethod<'

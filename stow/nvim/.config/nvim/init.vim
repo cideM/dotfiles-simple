@@ -1,9 +1,6 @@
 packadd minpac
 call minpac#init()
 
-" ==============================
-" =       GENERAL SETTINGS     =
-" ==============================
 " Don't load the built-in plugin so that the custom 'matchup' plugin is the
 " only such plugin that is active.
 " This doesn't seem to work
@@ -11,18 +8,23 @@ let g:loaded_matchit = 1
 
 set background=light
 set nocursorline
-set nonumber
-set norelativenumber
+set number
 set shiftwidth=2
 set tabstop=4
-set nolist
+set noequalalways
 set formatoptions=tcrqjn
 set wildignore+=*/.git/*,
-	  \*/node_modules/*,
-	  \*/build/*,
-	  \*/dist/*,
-	  \*/compiled/*,
-	  \*/tmp/*
+			\*/node_modules/*,
+			\*node_modules*,
+			\nix/sources.json,
+			\*.clj-kondo*,
+			\package-lock.json,
+			\*.min.*,
+			\*.map,
+			\*/build/*,
+			\*/dist/*,
+			\*/compiled/*,
+			\*/tmp/*
 set diffopt=algorithm:patience,filler,indent-heuristic,closeoff,iwhite
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 set hidden
@@ -33,20 +35,10 @@ set smartcase
 set inccommand=split
 set path-=/usr/include
 set splitbelow
-" I use Fish but it makes everything in Neovim a bit slower if it's used as
-" shell, especially Fugitive stuff
-set shell=bash
 set foldlevelstart=99
 set splitright
 set termguicolors
 set undofile
-
-" ==============================
-" =        COLORSCHEME         =
-" ==============================
-let g:tokyonight_enable_italic = 1
-let g:tokyonight_style = 'storm'
-call minpac#add('cidem/yui',{'branch':'v2'})
 colorscheme yui
 
 " https://github.com/neovim/neovim/issues/13113
@@ -59,15 +51,18 @@ augroup quickfix
   autocmd!
   autocmd QuickFixCmdPost [^l]* cwindow
   autocmd QuickFixCmdPost l* lwindow
+
+  autocmd FileType qf nnoremap <buffer> <left> :colder<cr>
+  autocmd FileType qf nnoremap <buffer> <right> :cnewer<cr>
 augroup END
 
 " Call my own SetPath function so that every git file is added to path. Let's
 " me get most of FZF without using FZF
-augroup SetPath
-  autocmd!
-  autocmd BufEnter,DirChanged * call pathutils#SetPath()
-  augroup END
-command! -nargs=0 UpdatePath :call pathutils#SetPath()
+" augroup SetPath
+"   autocmd!
+"   autocmd BufEnter,DirChanged * call pathutils#SetPath()
+"   augroup END
+" command! -nargs=0 UpdatePath :call pathutils#SetPath()
 
 " Built-in Neovim feature that highlights yanked code.
 augroup highlight_yank
@@ -88,10 +83,10 @@ function! FormatBuffer()
   call winrestview(view)
 endfunction
 
-command! -bar -nargs=1 Find new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd <args>
-command! -bar -nargs=1 FindAll new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd -uu <args>
-command! -bar -nargs=1 FindV vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd <args>
-command! -bar -nargs=1 FindAllV vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd -uu <args>
+" command! -bar -nargs=1 Find new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd <args>
+" command! -bar -nargs=1 FindAll new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd -uu <args>
+" command! -bar -nargs=1 FindV vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd <args>
+" command! -bar -nargs=1 FindAllV vnew | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile | 0r!fd -uu <args>
 
 let mapleader = " "
 let maplocalleader = ","
@@ -111,18 +106,16 @@ nnoremap <A-h>      <C-w>h
 nnoremap <A-j>      <C-w>j
 nnoremap <A-k>      <C-w>k
 nnoremap <A-l>      <C-w>l
+
 " Open terminal in directory of current file
 nnoremap <leader>T  :split <Bar> lcd %:p:h <Bar> term fish<CR>
 nnoremap <leader>t  :split <Bar> term fish<CR>
 
-" Leave insert mode with jk
 imap jk             <Esc>
 
-" Convenience mappings for calling :grep
 nnoremap <leader>gg :grep!<space>
 nnoremap <leader>gw :grep! -wF ""<left>
 
-" Just calls formatprg on entire buffer
 nmap     <leader>q  :call FormatBuffer()<cr>
 
 " nnoremap <leader>f  :find *
@@ -130,14 +123,11 @@ nmap     <leader>q  :call FormatBuffer()<cr>
 
 vmap     <Enter>    <Plug>(EasyAlign)
 
-nnoremap <leader>n  :nohlsearch<CR>
-
 " Reflow comments according to max line length. This temporarily unsets
 " formatprg so cindent (?) is used. I don't know... this mostly just works.
 nnoremap <leader>R  :set operatorfunc=reflow#Comment<cr>g@
 vnoremap <leader>R  :<C-u>call reflow#Comment(visualmode())<cr>
 
-" Switch to alternate buffer with backspace
 nnoremap <BS>       <C-^>
 
 " ======= SAYONARA ==================
@@ -149,6 +139,7 @@ map <leader>Q :Sayonara!<CR> " delete buffer and preserve window
 call minpac#add('justinmk/vim-sneak')
 let g:sneak#label      = 1
 let g:sneak#use_ic_scs = 1
+let g:sneak#s_next     = 1
 map f <Plug>Sneak_f
 map F <Plug>Sneak_F
 map t <Plug>Sneak_t
@@ -242,32 +233,9 @@ lua <<EOF
   nvim_lsp.dhall_lsp_server.setup{}
 EOF
 
-" ========= NVIM-COMPE ==============
-" Seems to be a bug in the library. It tries to require another plugin. Should
-" report upstream
-let g:loaded_compe_snippets_nvim=1
-call minpac#add('hrsh7th/nvim-compe')
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-lua <<EOF
-  require'compe'.setup {
-	enabled = true;
-	debug = false;
-	min_length = 1;
-	preselect = 'always';
-	allow_prefix_unmatch = false;
-	source = {
-	  path = true;
-	  buffer = true;
-	  vsnip = false;
-	  nvim_lsp = true;
-	  snippets_nvim = false;
-	};
-  }
-EOF
-
 " ======= FZF VIM ===================
+call minpac#add('junegunn/fzf.vim')
+call minpac#add('junegunn/fzf')
 autocmd! FileType fzf set laststatus=0 noshowmode noruler
 			\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
@@ -280,12 +248,6 @@ nnoremap <leader>fg :GFiles<CR>
 nnoremap <leader>fm :Marks<CR>
 nnoremap <leader>ft :Tags<CR>
 nnoremap <leader>fj :BTags<CR>
-
-" Path completion with custom source command
-" Note that --relative-to=… expects a directory and DOES NOT check. That
-" means that you end up with an extra "../" if you request a path relative to a
-" file. – IBBoard Mar 13 '18 at 20:05
-inoremap <expr> <c-x><c-f> fzf#vim#complete("fd <Bar> xargs realpath --relative-to " . expand("%:h"))
 
 let g:fzf_colors =
 	\ { 'fg':      ['fg', 'Normal'],
@@ -302,28 +264,74 @@ let g:fzf_colors =
 	\ 'spinner': ['fg', 'Label'],
 	\ 'header':  ['fg', 'Comment'] }
 
+" ========= NVIM-TREESITTER =========
+call minpac#add('nvim-treesitter/nvim-treesitter', {'type':'opt'})
+packadd nvim-treesitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  highlight = {
+	enable = true,
+	disable = {},
+  },
+  incremental_selection = {
+	enable = true,
+	keymaps = {
+	  init_selection = "<C-n>",
+	  node_incremental = "<C-w>",
+	  node_decremental = "<A-w>",
+	},
+  },
+  indent = {
+	enable = true,
+	disable = { "clojure" },
+  }
+}
+EOF
 
+" ========= NVIM-COMPE ==============
 call minpac#add('Olical/conjure')
+call minpac#add('hrsh7th/nvim-compe')
+call minpac#add('tami5/compe-conjure')
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+
+lua <<EOF
+require'compe'.setup {
+  enabled = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'always';
+  allow_prefix_unmatch = false;
+
+  source = {
+	path = true;
+	buffer = true;
+	vsnip = false;
+	nvim_lsp = true;
+	conjure = true;
+  };
+}
+EOF
+
 call minpac#add('cidem/neovim-set-path')
 call minpac#add('justinmk/vim-dirvish')
 call minpac#add('cocopon/iceberg.vim')
 call minpac#add('eraserhd/parinfer-rust',{'do':'!cargo build --release','type':'opt'})
 call minpac#add('junegunn/vim-easy-align')
 call minpac#add('junegunn/vim-peekaboo')
-call minpac#add('junegunn/fzf.vim')
-call minpac#add('junegunn/fzf')
 call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('machakann/vim-sandwich')
 call minpac#add('romainl/Apprentice')
 call minpac#add('sonph/onehalf', {'dir': 'vim'})
 call minpac#add('tpope/vim-commentary')
 call minpac#add('tpope/vim-eunuch')
-call minpac#add('tpope/vim-fugitive')
 call minpac#add('tpope/vim-repeat')
-call minpac#add('tpope/vim-rhubarb')
 call minpac#add('tpope/vim-scriptease')
 call minpac#add('tpope/vim-unimpaired')
 call minpac#add('purescript-contrib/purescript-vim')
+call minpac#add('romainl/vim-cool')
 call minpac#add('LnL7/vim-nix')
 call minpac#add('vmchale/dhall-vim')
 call minpac#add('yuezk/vim-js')
@@ -331,4 +339,15 @@ call minpac#add('liuchengxu/space-vim-theme')
 call minpac#add('maxmellon/vim-jsx-pretty')
 call minpac#add('tbastos/vim-lua')
 call minpac#add('wellle/targets.vim')
+call minpac#add('mzlogin/vim-markdown-toc')
+call minpac#add('lambdalisue/suda.vim')
 call minpac#add('yssl/QFEnter')
+call minpac#add('chrisbra/unicode.vim')
+
+" ========= GIT =====================
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('tpope/vim-rhubarb')
+" needs https://github.com/wfxr/code-minimap
+call minpac#add('wfxr/minimap.vim')
+call minpac#add('rbong/vim-flog')
+call minpac#add('rhysd/git-messenger.vim')

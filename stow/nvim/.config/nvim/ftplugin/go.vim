@@ -16,3 +16,8 @@ command! -buffer -range=% Goimport let b:winview = winsaveview() |
 
 nnoremap <silent> <localleader>m :execute 'make ' . expand('%:p:h')<CR>
 nnoremap <silent> <localleader>i :Goimport<CR>
+
+setlocal foldmethod=expr
+setlocal foldexpr=nvim_treesitter#foldexpr()
+let b:undo_ftplugin .= '|setlocal foldexpr<'
+let b:undo_ftplugin .= '|setlocal foldmethod<'

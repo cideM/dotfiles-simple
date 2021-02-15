@@ -33,3 +33,8 @@ nnoremap <buffer> <silent> <localleader>ts :JestSplit<cr>
 
 command! -bar -buffer JestSplitWatch :split | execute 'terminal jest --watch '. expand('%')
 nnoremap <buffer> <silent> <localleader>tw :JestSplitWatch<cr>
+
+setlocal foldmethod=expr
+setlocal foldexpr=nvim_treesitter#foldexpr()
+let b:undo_ftplugin .= '|setlocal foldexpr<'
+let b:undo_ftplugin .= '|setlocal foldmethod<'

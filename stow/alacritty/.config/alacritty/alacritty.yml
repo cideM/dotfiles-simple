@@ -151,3 +151,9 @@ key_bindings:
   - { key: RBracket,  mods: Alt|Shift, chars: "\x1b}" }
   - { key: Slash,     mods: Alt|Shift, chars: "\x1b?" }
   - { key: Backslash, mods: Alt|Shift, chars: "\x1b|" }
+  - { key: Tab,       mods: Control,       chars: "` " }
+  - { key: S,         mods: Control|Shift, chars: "`c" }
+  - { key: X,         mods: Control|Shift, chars: "`x" }
+  - { key: Minus,     mods: Control,       chars: "`-" }
+  - { key: Backslash, mods: Control,       chars: "`|" }
+  - { key: Grave,     mods: Control,       chars: "`z" }
