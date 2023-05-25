@@ -1,0 +1,34 @@
+[push]
+    default = simple
+
+[diff]
+    algorithm = histogram
+    colorMoved = default
+
+[pull]
+    rebase = true
+
+[merge]
+    conflictStyle = diff3
+
+[user]
+    email = yuuki@protonmail.com
+    name = Florian Beeres
+
+[github]
+    user = "yuuki@protonmail.com";
+
+[core]
+    editor = nvim
+    excludesfile = ~/.gitignore
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+[init]
+	defaultBranch = main
