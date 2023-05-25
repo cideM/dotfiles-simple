@@ -1,0 +1,2 @@
+setl formatprg=alejandra\ -q
+
