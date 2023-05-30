@@ -15,6 +15,9 @@ set autoindent
 set backspace=2
 set laststatus=2
 set list
-set listchars=eol:¬,space:\ ,lead:\ ,trail:·,nbsp:◇,tab:\│\ ,extends:▸,precedes:◂,multispace:\·\ \ \,leadmultispace:\│\ \ \ ,
+set listchars=eol:¬,space:\ ,lead:\ ,trail:·,nbsp:◇,tab:→\ ,extends:❯,precedes:❮,multispace:\·\ \ \,leadmultispace:\│\ \ \ ,
+set grepprg=rg\ -H\ --vimgrep
 
+let mapleader = " "
+nnoremap <Leader>/ :nohlsearch<CR>
 nnoremap <BS> <C-^>
