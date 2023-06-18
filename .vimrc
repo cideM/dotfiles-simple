@@ -7,6 +7,7 @@ set hlsearch
 set visualbell
 set textwidth=72
 set formatoptions+=r
+set modelines=1
 set hidden
 set noerrorbells
 set noexpandtab
