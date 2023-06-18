@@ -33,7 +33,7 @@ set expandtab
 set tabstop=2
 set laststatus=2
 set shiftwidth=2
-set colorcolumn=100
+set colorcolumn=+0
 set timeoutlen=500
 set formatoptions=crqjn
 set mouse=a
@@ -52,7 +52,9 @@ set undofile
 set termguicolors
 set grepprg=rg\ --vimgrep\ --smart-case
 set grepformat=%f:%l:%c:%m
-set path-=/usr/include list lcs=trail:¬,tab:\ \ 
+set path-=/usr/include 
+set list
+set listchars=eol:¬,space:\ ,lead:\ ,trail:·,nbsp:◇,tab:→\ ,extends:❯,precedes:❮,multispace:\·\ \ \,leadmultispace:\│\ \ \ ,
 set statusline+=\ %f\ %m%=\ %y\ %q\ %3l:%2c\ \|%3p%%\ 
 
 " COLOR STUFF
