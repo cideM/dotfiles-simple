@@ -23,3 +23,5 @@ set -x FZF_CTRL_T_OPTS "--preview 'cat {}'"
 set -x FZF_CTRL_T_COMMAND 'fd -L $dir --type f 2> /dev/null'
 
 set -x GOPATH ~/go
+set -gx VOLTA_HOME "$HOME/.volta"
+set -gx PATH "$VOLTA_HOME/bin" $PATH
